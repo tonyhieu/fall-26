@@ -44,9 +44,29 @@ $$
 
 The first order condition is met at $x=k\pi, \frac{\pi}{2} + k\pi \; \forall k \in \mathbb{Z}$ from the sine and cosine terms. It is also met at $$m\cos^2 x = n\sin^2 x \iff \tan^2 x = \frac{m}{n}$$ which corresponds to $x = \pm \arctan\left(\frac{m}{n}\right) + k\pi \; \forall k\in \mathbb{Z}$.
 
-### Problem 2
+### (b)
 
-#### (a)
+#### f(x)
+
+$$
+\begin{align}
+  f'(x) &= \frac{1}{3}x^{-2/3}(1-x)^{2/3} + \frac{2}{3}x^{1/3}(1-x)^{-1/3}\\
+  &= \frac{1}{3}x^{-2/3}(1-x)^{-1/3}\left[ (1-x) + 2x \right]\\
+  &= \frac{1}{3}x^{-2/3}(1-x)^{-1/3}\left[ 1+x \right]
+  &= -\frac{1}{3}x^{-2/3}(1-x)^{2/3}
+\end{align}
+$$
+
+There are two critical points: $x=0, 1$. Analyzing the first order sufficient condition for these three points, we have 
+$$
+\begin{gather}
+  
+\end{gather}
+$$
+
+## Problem 2
+
+### (a)
 
 We will use the fact that we know $e^\pi > \pi^e$ to craft our function:
 $$
@@ -59,7 +79,7 @@ $$
 
 Thus, we choose the function $f(x) = x - e\ln x$ for $x>0$. The first derivative is $$f'(x) = 1 - \frac{e}{x}$$ with one value satisfying the first-order condition: $x=e$. The second derivative is $$g''(x) = \frac{e}{x^2}$$ which is positive for all $x>0$. Thus, $x=e$ is the global minimizer that makes $g(x)=0$. Since $\pi\neq e$, we can reconstruct the original inequality and arrive at the conclusion that $e^\pi > \pi^e$.
 
-#### (b)
+### (b)
 
 Without loss of generality, let $a\geq b$. We can then rearrange the inequality as
 $$
@@ -71,7 +91,7 @@ $$
 
 Thus, we set the function to $f(x) = x^p - px$ and have to show that $f(a) \leq f(b)$ for $a\geq b$; in other words, we have to show that $f(x)$ is nonincreasing. The first-order derivative of is $$f'(x) = px^{p-1} - p = p(x^{p-1} - 1) \leq 0.$$ Because $a,b \in [0,1]$ and $p\geq 1$, the first derivative is $\leq 0$. Thus, $f$ is nonincreasing, and we have shown that the inequality is true.
 
-#### (c)
+### (c)
 
 A rectangle inscribed in a circle must have a diagonal that equals the diameter of the circle. A unit circle has a diameter of length $2$. The function that we form thus maximizes the area of a rectangle with a diagonal of length $2$:
 $$
@@ -84,7 +104,7 @@ $$
 
 The first derivative of this function is $$f'(x) = \sqrt{4-x^2} - \frac{x^2}{\sqrt{4-x^2}} = \frac{4-2x^2}{\sqrt{4-x^2}}$$ whose optimizer is $$4-2x^2 = 0 \iff x = \sqrt{2}.$$ We know that this is a maximizer because $f(x)\rightarrow 0$ for both of the endpoints $x=0, 4$, so the rectangle with the maximum area is the one where $l, w = \sqrt{2}$ which is a square.
 
-#### (d)
+### (d)
 
 Let us express the volume of iron as the volume of the empty space subtracted from the volume of the outer rectangular prism: $$(x+2)^2(h+1) - x^2h = 76.$$ This allows us to express the capacity of the box, $x^2h$, in terms of one variable $h$:
 $$
@@ -114,7 +134,7 @@ $$
 
 The only critical point in the domain $x\in (0, \sqrt{76} - 2)$ is $x=4$. Thus, the maximizer is obtained at $x=4$; in other words, the side length of the square is $4$ and the height is $\frac{76 - 36}{36 - 16}=2$. This is a maximizer because it satisfies the first order condition and it is greater than the two endpoints, indicating that the function is concave down on $(0, \sqrt{76} - 2)$.
 
-#### (e)
+### (e)
 
 Using the figure below, let us define the following variables. Let the light start at $A$, the origin of the red ray, and $a$ be the height above the surface of the water corresponding to $A$. Similarly, let $B$ be the end of the light's path below the surface of the water, with $b$ being the height corresponding to this ending point. Let $d$ be the horizontal distance between $A$ and $B$, and let $x$ be the horizontal distance between $A$ and the light's entrypoint into the water (measured from directly below $A$). Thus, $0\leq x \leq d$.
 
@@ -133,5 +153,4 @@ $$
 $$
 
 This is the only critical point. The second derivative is strictly positive, so it is a minimizer.
-
 
