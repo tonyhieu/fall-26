@@ -50,19 +50,25 @@ The first order condition is met at $x=k\pi, \frac{\pi}{2} + k\pi \; \forall k \
 
 $$
 \begin{align}
-  f'(x) &= \frac{1}{3}x^{-2/3}(1-x)^{2/3} + \frac{2}{3}x^{1/3}(1-x)^{-1/3}\\
-  &= \frac{1}{3}x^{-2/3}(1-x)^{-1/3}\left[ (1-x) + 2x \right]\\
-  &= \frac{1}{3}x^{-2/3}(1-x)^{-1/3}\left[ 1+x \right]
-  &= -\frac{1}{3}x^{-2/3}(1-x)^{2/3}
+  f'(x) &= \frac{1}{3}x^{-2/3}(1-x)^{2/3} - \frac{2}{3}x^{1/3}(1-x)^{-1/3}\\
+  &= \frac{1}{3}x^{-2/3}(1-x)^{-1/3}\left[ (1-x) - 2x \right]\\
+  &= \frac{1}{3}x^{-2/3}(1-x)^{-1/3}\left[ 1-3x \right]
 \end{align}
 $$
 
-There are two critical points: $x=0, 1$. Analyzing the first order sufficient condition for these three points, we have 
+There are three critical points: $x=0, 1, -1$. Analyzing the first order sufficient condition for these three points, we have 
 $$
 \begin{gather}
-  
+  \lim_{x\rightarrow -1^-} f'(x) &> 0\\
+  \lim_{x\rightarrow -1^+} f'(x) &< 0\\
+  \lim_{x\rightarrow 0^-} f'(x) &< 0\\
+  \lim_{x\rightarrow 0^+} f'(x) &> 0\\
+  \lim_{x\rightarrow 1^-} f'(x) &> 0\\
+  \lim_{x\rightarrow 1^+} f'(x) &< 0\\
 \end{gather}
 $$
+
+Thus, all three points are local optimizers, with $x=-1, 1$ being maximizers and $x=0$ being a minimizer. Clearly, $x=0$
 
 ## Problem 2
 
