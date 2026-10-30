@@ -59,6 +59,109 @@ $$
 
 To make $N$ an integer, we can again use the ceiling function. Since we are running the algorithm $T^*$ times with $N$ iterations each time, the total number of iterations is $$\left\lceil 4\sqrt{L/\mu}\right\rceil \cdot \left\lceil \log_2 \left(\frac{f_(z_0) - f^*}{\varepsilon}\right)\right\rceil.$$
 
+## Problem 2
+
+### (a)
+
+By the chain rule, the gradient of $F_U$ is $$\nabla F_U(w) = U \nabla f(U^T w).$$ We can differentiate again and find that the Hessian is $$\nabla^2 F_U(w) = U \nabla^2 f(U^Tw) U^T.$$ This matrix is symmetric because $\nabla^2 f$, for any $f$, is symmetric.
+
+Using the property $UU^T = U^TU = I$, we have $U^T = U^{-1}$. This means that $\nabla^2 F_U$ is similar to $\nabla^2 f$. Because of this property, we also have, for any vector $v$, $$\left\lVert U^Tv \right\rVert^2 = (U^Tv)^T(U^Tv) = v^TUU^Tv = v^Tv = \left\lVert v \right\rVert^2.$$
+
+Lecture 4 gives us $$\nabla f(w) = \frac{L}{(1+\rho)^2} (Bw - (1-\rho^2)ae_1) \rightarrow \nabla^2 f(w) = \frac{L}{(1+\rho)^2}B := M \quad \forall w.$$ Note that we can express $\nabla^2 F_U(w)$ in terms of $M$ via $$\nabla^2 F_U(w) = U M U^T.$$  For any vector $v$, we have
+$$
+\begin{align}
+  v^T \nabla^2 F_U(w) v &= (U^Tv)^T M (U^Tv)\\
+  &\in \left[\mu \left\lVert U^Tv \right\rVert^2, L \left\lVert U^Tv \right\rVert^2 \right] && \text{(Using $\mu I \preceq M \preceq LI$ from Lecture 4)}\\
+  &\in \left[\mu \left\lVert v \right\rVert^2, L \left\lVert v \right\rVert^2 \right]. && \text{($\left\lVert U^Tv \right\rVert = \left\lVert v \right\rVert$)}
+\end{align}
+$$
+
+From this result, we can conclude that $$\mu I \preceq \nabla^2 F_U \preceq LI,$$ so $F_U$ maintains the same properties of $\mu$-strong convexity and $L$-Lipschitz smoothness.
+
+Because $U$ gives a bijection from $\mathbb{R}^{2T}$ to $\mathbb{R}^{2T}$, we have $$F_U(w) = f(U^Tw) \geq f^*$$ for all $w$. Note that we have equality when $w = Uw^*$, as $$F_U(Uw^*) = f(U^TUw^*) = f(w_*) = f^*,$$ so the minimum value is maintained.
+
+Using the same assumption that $w_0 = 0$, we have $$F_U(w_0) = f(U^T \cdot 0) = f(0) = f(w_0),$$ so the function gap $\Delta = f(w_0) - f^*$ is also maintained, as $F_U(w_0) = f(w_0)$.
+
+### (b)
+
+#### (1)
+
+We want to show that fixing $u_1$ determines $F_U(0)$ and $\nabla F_U(0)$; in other words, show that it determines the first oracle value $\left( F_U(w_0), \nabla F_U(w_0) \right)$.
+
+Since $w_0 = 0$, the value of $F_U$ is $$F_U(0) = f(U^T \cdot 0) = f(0) = \Delta.$$ $f(0) = \Delta$ uses the fact that $f^* = 0$ from Lecture 4.
+
+From part (a), we have $$\nabla F_U(w) = U \nabla f(U^Tw),$$ so $$\nabla F_U(0) = U\nabla f(0).$$ Plugging $w=0$ into the formula for $\nabla f(w)$ gives
+$$
+\begin{align}
+  \nabla f(0) &= \frac{L}{(1+\rho)^2} (B\cdot 0 - (1-\rho^2)ae_1)\\
+  &= -\frac{L}{(1+\rho)^2} ((1-\rho^2)ae_1)\\
+  &= -ce_1,
+\end{align}
+$$
+where $c = \frac{La(1-\rho^2)}{(1+\rho)^2}$. We also know the value of $c$, as $$f(0) = \Delta = \frac{La^2(1-\rho^2)}{(1+\rho)^2} = ca.$$ Therefore, $c = \frac{\Delta}{a}$.
+
+Putting it together, we have $$\nabla F_U(0) = U(-ce_1) = -c \cdot Ue_1 = -cu_1.$$ Therefore, we have $$\left( F_U(0), \nabla F_U(0) \right) = \left(\Delta, -\frac{\Delta}{a}u_1 \right)$$ and have thus shown that the unit vector $u_1$ determines the first oracle result. This is the base case for the result part (b) wants to prove; for $w_0$, $u_1$ has been chosen.
+
+#### (2)
+
+For $k=1$, we know that the first $2k-1 = 1$ columns have been chosen and are orthonormal, as $u_1$ is chosen via $w_0$. We also know that the function is deterministic, meaning that $w_k$ is a function of the oracle answers from $w_0$ to $w_{k-1}$. Therefore, $w_k$ is a fixed, determined vector, and following columns $u_j$ with $j>k$ can be chosen using the knowledge of $w_k$.
+
+Since the dimension of the vectors is $2T$ and $k \leq T-1$, the orthogonal component of $\text{span}\{u_1, \ldots, u_{2k-1}\}$ has dimension $$2T - 2k + 1 \geq 2T - 2(T - 1) + 1 = 3.$$ This gives us room to add two more orthonormal columns, $u_{2k}$ and $u_{2k+1}$.
+
+We want to choose $u_{2k}$ such that $w_k \in \text{span}\{u_1, \ldots, u_{2k}\}$; in other words, we want to choose the vector that is NOT in $\text{span}\{u_1, \ldots, u_{2k-1}\}$. To do so, separate $w_k$ from its components along the existing columns: $$r = w_k - \sum_{j=1}^{2k-1} \langle u_j, w_k \rangle u_j.$$ If $r\neq 0$, then set $u_k = \frac{r}{\left\lVert r \right\rVert}$ in order to obtain a unit vector orthogonal to $\text{span}\{u_1, \ldots, u_{2k-1}\}$. If $r=0$, then $w_k$ already lies within $\text{span}\{u_1, \ldots, u_{2k-1}\}$, so we can choose $u_{2k}$ to be any unit vector orthogonal to the span. Thus, we have chosen a vector $u_{2k}$ that satisfies $$w_k \in \text{span}\{u_1, \ldots, u_{2k}\}.$$
+
+For $u_{2k+1}$, we can choose any unit vector orthogonal to $\text{span}\{u_1, \ldots, u_{2k}\}$, and the gradient will lie in $\text{span}\{u_1, \ldots, u_{2k+1}\}$. 
+
+To prove this, we can start with the lemma from Step 3 in Lecture 4. Using the fact that $B_k$ is tridiagonal, we can conclude that $\nabla f(w_k) \in E_{k+1}$. Additionally, $\nabla F_U(w) \in E_{2k+1}$. The $i$-th entry of $U^Tw_k$ is $\langle u_i, w_k \rangle$ which is $0$ for any $i > 2k$ because $w_k \in \text{span}\{u_1, \ldots, u_{2k}\}$ and the columns are orthonormal. This holds for later columns that are chosen orthonormal to $u_1, \ldots, u_{2k}$. Thus, $U^Tw_k \in E_{2k}$, and using the same lemma as above, $\nabla f(U^Tw_k) \in E_{2k+1}$. 
+
+$\nabla f(U^Tw_k) \in E_{2k+1}$ means that $\nabla F_U(w_k) \in \text{span}\{u_1, \ldots, u_{2k+1}\}$, completing our proof that we can extend these columns to an orthonormal family such that (1) holds.
+
+#### (3)
+
+We want to show that $F_U(w_k)$ and $\nabla F_U(w_k)$ do not depend on the last $2T - 2k - 1$ columns (i.e. $u_{2k+2}, \ldots, u_{2T}$). Note that these columns are free but must form an orthonormal basis on $\mathbb{R}^{2T}$.
+
+First, let's show that $F_U(w_k)$ only uses $u_1, \ldots, u_{2k}$. The $i$-th entry of $U^Tw_k$ is $\langle u_i, w_k \rangle$. For $i \leq 2k$, $u_i$ is fixed already and in $u_1, \ldots, u_{2k}$. For $i>2k$, as shown above, $\langle u_i, w_k \rangle = 0$. Therefore, $$U^Tw_k = (\langle u_1, w_k \rangle, \ldots, \langle u_{2k}, w_k \rangle, 0, \ldots, 0) \in E_{2k},$$ proving that $U^Tw_k$ does not depend on any columns beyond $u_{2k}$.
+
+Next, let's show that the gradient $\nabla F_U(w_k)$ only uses $u_1, \ldots, u_{2k+1}$. As we just showed, $\nabla F_U(w_k) \in E_{2k+1}$, so only the first $2k+1$ entries can be nonzero. Expressing the gradient as a combination of columns gives $$\nabla F_U(w_k) = \sum_{i=1}^{2k+1} (\nabla f(U^Tw_k))_i \cdot u_i.$$ We have already established that the $U^Tw_k$ inside of $f(U^Tw_k)$ only relies on $u_1, \ldots, u_{2k}$, so the $i$-th entry of $\nabla f(U^Tw_k)$ is in $\text{span}\{u_1, \ldots, u_{2k}\}$. From (2), we choose $u_{2k+1}$ at step $k$ which is why we are able to sum from $1$ to $2k+1$. Thus, the gradient of $F_U(w_k)$ is independent of the last $2T - 2k - 1$ columns.
+
+Steps (1), (2), and (3) have proved that this construction preserves earlier oracle answers. Step (1) provides the base case; for $k=0$, we have $$w_k \in \text{span}\{\} = \text{span}\{u_1, \ldots, u_{2k}\} \text{ and } \nabla F_U(w_k) \in \text{span}\{u_1\} = \text{span}\{u_1, \ldots, u_{2k+1}\}.$$ At step $k > 0$, we can choose $w_k$ as well as two new columns $u_{2k}, u_{2k+1}$ independently from $u_{2k+2}, \ldots, u_{2T}$. All previous oracle answers are preserved because we have shown that the oracle does not need any information from future steps. Additionally, none of the previous columns of $U$ are changed; the process only adds columns to $U$ as opposed to modifying or deleting previous ones.
+
+### (c)
+
+As we showed in part (b), after $T$ answers (i.e. $k=T-1$ since there are $T$ steps between $0$ and $T-1$), we have $u_{1}, \ldots, u_{2k+1} = u_{2T-1}$. The dimension of the span of $U$ at this point is $2T-1$, so the orthogonal complement of $U$ is dimension $1$ (i.e. a line). Let $v$ be the unit vector spanning this line. $u_{2T}$ must be this line, as $U$ has orthonormal vectors. We also know what $w_T \in \text{span}\{u_1, \ldots, u_{2T-1}\}$ is after step $T-1$. We can define $u_{2T}$ as $$u_{2T} = \begin{cases} v, && \langle v, w_T \rangle \leq 0 \\ -v, && \langle v, w_T \rangle > 0 \end{cases}$$ to satisfy the desired condition.
+
+This choice does not change any oracle answer because, as previously established, the values of $F_U(w_k)$ and $\nabla F_U(w_k)$ do not depend on the last $2T-2k-1$ columns of $U$, and $k \leq T-1$, so the entire process does not depend at all on the last $2T - 2(T-1) - 1 = 1$ column.
+
+Let $F_U$ be the function with the final $U$ and $\tilde{w_0}, \ldots, \tilde{w_T}$ denote the queries and outputs when the algorithm is run on $F_U$. Using induction, we will prove that $w_i = \tilde{w_i}, \quad \forall i$.
+
+The base case is simple: $\tilde{w_0} = 0 = w_0$ since the algorithm starts at $0$.
+
+For the inductive step, suppose that $\tilde{w_j} = w_j$ for all $j < k$. When $U$ was being constructed, $w_k$ was computed using the columns $u_1, \ldots, u_{2k - 1}$ and prior answers $w_0, \ldots, w_{k-1}$. Thus, the algorithm has the same state in both the fixed and adaptive versions, and because it is deterministic, the same state will always produce the same answer. Thus, the algorithm always produces $w_k = \tilde{w_k}$. 
+
+Running this for all $T$ steps gives $\tilde{w_T} = w_T$, as the states of both functions are always the same at each step, so running the algorithm on the fixed $U$ is the same as the adaptive algorithm that forms $U$.
+
+### (d)
+
+Let $n=2T$ and $z = w^* - w$. From Lecture 4, we have $$w_{i+1}^* = \rho w^*_i \rightarrow w_{i+1} - \rho w_i = -(z_{i+1} - \rho z_i).$$ We also have $a-w_1 = z_1$ from $w_1^* = a$. Since we know that $f^* = 0$, we can rewrite $f(w)$ as $$f(w) = \frac{L}{2(1+\rho)^2}Q, \quad Q = (1-\rho^2)z_1^2 + \sum_{i=1}^{n-1} (z_{i+1} - \rho z_i)^2.$$
+
+The last coordinate $w_n^* = a\rho^{n-1}$ and $w_n \leq 0$, so $$z_n \geq a\rho^{n-1} > 0.$$
+
+We can use telescoping to define $z_n$ as $$z_n = \sum_{i=1}^{n-1} \rho^{n-1-i} (z_{i+1} - \rho z_i) + \rho^{n-1}z_1.$$ Let $r_i = z_{i+1} - \rho z_i$, and rewrite the last term as $$z_1\sqrt{1-\rho^2} \cdot \frac{\rho^{n-1}}{\sqrt{1-\rho^2}}.$$ Then, $z_n$ can be expressed as an inner product between $$\beta = \left(\sqrt{1-\rho^2}\cdot z_1, r_1, \ldots, r_{n-1}\right), \quad \alpha = \left( \frac{\rho^{n-1}}{\sqrt{1-\rho^2}}, \rho^{n-2}, \ldots, \rho^0 \right).$$ Note that $\sum \beta_k^2 = Q$.
+
+With these two facts, we can apply Cauchy-Schwarz to $z_n$: $$z_n^2 \leq \left(\sum \alpha_k^2\right) \cdot Q.$$ Computing $\left(\sum \alpha_k^2\right)$ gives $$\left(\sum \alpha_k^2\right) = \frac{\rho^{2n-2} }{1-\rho^2} + (\rho^{2n-2} + \ldots + \rho^0) = \frac{\rho^{2n-2} + 1 - \rho^{2n-2}}{1-\rho^2} = \frac{1}{1-\rho^2}.$$
+
+Thus, our final inequality is $$z_n^2 \leq \frac{Q}{1-\rho^2} \iff Q \geq (1-\rho^2)z_n^2$$. Combining with the fact that $z_n \geq a\rho^{n-1} > 0$ gives $$Q \geq (1-\rho^2)a^2\rho^{2n-2} = (1-\rho^2)a^2\rho^{4T-2}.$$ At $w=0$, every mismatch $(0 - \rho\cdot 0)$ disappears, so $$\Delta = f(0) = \frac{L(1-\rho^2)a^2}{2(1+\rho)^2}$$ and $$f(w) = \frac{L}{2(1+\rho)^2} \cdot Q \geq \frac{L}{2(1+\rho)^2} \cdot (1-\rho^2)a^2\rho^{4T-2} = \Delta \cdot \rho^{4T-2}.$$
+
+Because $f^*=0$, we have $$\frac{f(w) - f^*}{\Delta} \geq \rho^{4T-2}.$$
+
+From part (c), we kknow that the final column satisfies $\langle u_{2T}, w_T \rangle \leq 0$. By setting $w=U^Tw_T$, we have a nonpositive last coordinate, so $$\frac{F_U(w_T) - F_U^*}{\Delta} = \frac{f(U^Tw_T) - f^*}{\Delta} \geq \rho^{4T-2}$$ because $F_U^* = f^* = 0$.
+
+The span assumption had bounds of $\rho^{2T}$ while the new bound is $\rho^{4T-2}$. Removing the assumption doubles the exponent of the bound, making the new bound weaker by a constant exponential factor.
+
+To have an error $\leq \varepsilon\Delta$, $$\rho^{4T-2} \leq \varepsilon \iff 4T-2 \geq \frac{\log 1/\varepsilon}{\log 1/\rho}$$ must hold. Since $\rho = \frac{\sqrt{\kappa - 1}}{\sqrt{\kappa + 1}}$, we have $$\log 1/\rho = 2 \text{arctanh} (1 / \sqrt{\kappa}) \rightarrow \Theta (1 / \sqrt{\kappa}).$$ Thus, we have $T \gtrapprox \frac{\sqrt{\kappa}}{4} \cdot \log(1 / \varepsilon)$ instead of $\approx \frac{\sqrt{\kappa}}{2} \cdot \log(1 / \varepsilon)$ under the span assumption. Therefore, the iteration increases by a constant while the dependence on $\kappa$ and $\varepsilon$ stays the same. This bound applies for a "sufficiently large dimension", i.e. $T \leq \frac{d}{2}$, the same as in Lecture 4.
+
+This construction gives one hard function for each algorithm. Because the rotation $U$ is built from the algorithm's queries, $F_U$ depends on the algorithm itself. This matches the order of quantifiers in the lower-bound statement ($\inf_{A\in \mathcal{A}_k} \sup_{f\in \mathcal{F}} \mathcal{L}(w_{A(f)})$) from Lecture 4.
+
 ## Problem 3
 
 ### (a)
